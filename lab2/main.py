@@ -1,3 +1,6 @@
+from pathlib import Path
+
+
 class Caesar:
     alphabets: list[str] = [
         "abcdefghijklmnopqrstuvwxyz",
@@ -41,6 +44,34 @@ class Caesar:
     @classmethod
     def dechipher(cls, chiphered_text: str, key: int) -> str:
         return cls.__inner_chipher(chiphered_text, key, "dechipher")
+
+    @classmethod
+    def chipher_file(cls, source_file_name: str, key: int, target_file_name: str | None = None):
+        with open(source_file_name, "r") as f:
+            content = f.read()
+
+        encrypted_text = cls.chipher(content, key)
+
+        if target_file_name is None:
+            p = Path(source_file_name)
+            target_file_name = f"{p.stem}_encrypted{p.suffix}"
+
+        with open(target_file_name, "w") as f:
+            f.write(encrypted_text)
+
+    @classmethod
+    def dechipher_file(cls, source_file_name: str, key: int, target_file_name: str | None = None):
+        with open(source_file_name, "r") as f:
+            content = f.read()
+
+        decrypted_text = cls.dechipher(content, key)
+
+        if target_file_name is None:
+            p = Path(source_file_name)
+            target_file_name = f"{p.stem}_decrypted{p.suffix}"
+
+        with open(target_file_name, "w") as f:
+            f.write(decrypted_text)
 
 
 class Vigenere:
@@ -106,20 +137,54 @@ class Vigenere:
 
         return "".join(result)
 
+    @classmethod
+    def chipher_file(cls, source_file_name: str, key: str, target_file_name: str | None = None):
+        with open(source_file_name, "r") as f:
+            content = f.read()
+
+        encrypted_text = cls.chipher(content, key)
+
+        if target_file_name is None:
+            p = Path(source_file_name)
+            target_file_name = f"{p.stem}_encrypted{p.suffix}"
+
+        with open(target_file_name, "w") as f:
+            f.write(encrypted_text)
+
+    @classmethod
+    def dechipher_file(cls, source_file_name: str, key: str, target_file_name: str | None = None):
+        with open(source_file_name, "r") as f:
+            content = f.read()
+
+        decrypted_text = cls.dechipher(content, key)
+
+        if target_file_name is None:
+            p = Path(source_file_name)
+            target_file_name = f"{p.stem}_decrypted{p.suffix}"
+
+        with open(target_file_name, "w") as f:
+            f.write(decrypted_text)
+
 
 def main():
-    p_t = "посольство Венгрии"
-    key = 17
-    v_key = "Будапешт"
-    c_t = Caesar.chipher(p_t, key)
-    n_p_t = Caesar.dechipher(c_t, key)
-    print(c_t)
-    print(n_p_t)
+    plaintext = input("Текст для шифрования:")
+    key = int(input("Ключ:"))
+    encrypted_text = Caesar.chipher(plaintext, key)
+    print(f"Зашифрованный текст: {encrypted_text}")
+    print(f"Расшифрованный текст: {Caesar.dechipher(encrypted_text, key)}")
 
-    c_t = Vigenere.chipher(p_t, v_key)
-    n_p_t = Vigenere.dechipher(c_t, v_key)
-    print(c_t)
-    print(n_p_t)
+    # p_t = "посольство Венгрии"
+    # key = 17
+    # v_key = "Будапешт"
+    # c_t = Caesar.chipher(p_t, key)
+    # n_p_t = Caesar.dechipher(c_t, key)
+    # print(c_t)
+    # print(n_p_t)
+    #
+    # c_t = Vigenere.chipher(p_t, v_key)
+    # n_p_t = Vigenere.dechipher(c_t, v_key)
+    # print(c_t)
+    # print(n_p_t)
 
 
 if __name__ == "__main__":
