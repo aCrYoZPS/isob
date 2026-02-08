@@ -33,7 +33,6 @@ class Caesar:
                 result += c
 
         return result
-        pass
 
     @classmethod
     def chipher(cls, plaintext: str, key: int) -> str:
@@ -44,20 +43,81 @@ class Caesar:
         return cls.__inner_chipher(chiphered_text, key, "dechipher")
 
 
-class Visener:
+class Vigenere:
     @classmethod
     def chipher(cls, plaintext: str, key: str) -> str:
-        pass
+        return cls.__inner_chipher(plaintext, key)
 
+    @classmethod
     def dechipher(cls, chiphered_text: str, key: str) -> str:
-        pass
+        return cls.__inner_chipher(chiphered_text, key, "dechipher")
+
+    @classmethod
+    def __inner_chipher(cls, text: str, key: str, mode: str = "chipher"):
+        latin = "abcdefghijklmnopqrstuvwxyz"
+        cyrillic = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+
+        latin_map = {char: index for index, char in enumerate(latin)}
+        cyrillic_map = {char: index for index, char in enumerate(cyrillic)}
+
+        result = []
+        key_index = 0
+        key = key.lower()
+
+        def get_shift(k_char):
+            if k_char in latin_map:
+                return latin_map[k_char]
+            elif k_char in cyrillic_map:
+                return cyrillic_map[k_char]
+            return 0
+
+        for char in text:
+            lower_char = char.lower()
+
+            if lower_char in latin_map:
+                alphabet = latin
+                idx = latin_map[lower_char]
+                mod = 26
+            elif lower_char in cyrillic_map:
+                alphabet = cyrillic
+                idx = cyrillic_map[lower_char]
+                mod = 33
+            else:
+                result.append(char)
+                continue
+
+            k_char = key[key_index % len(key)]
+            shift = get_shift(k_char)
+
+            if mode == 'chipher':
+                new_idx = (idx + shift) % mod
+            elif mode == 'dechipher':
+                new_idx = (idx - shift) % mod
+            else:
+                raise ValueError("Mode must be 'chipher' or 'dechipher'")
+
+            new_char = alphabet[new_idx]
+            if char.isupper():
+                new_char = new_char.upper()
+
+            result.append(new_char)
+
+            key_index += 1
+
+        return "".join(result)
 
 
 def main():
-    p_t = "эЁюя aBc"
-    key = 1
+    p_t = "посольство Венгрии"
+    key = 17
+    v_key = "Будапешт"
     c_t = Caesar.chipher(p_t, key)
     n_p_t = Caesar.dechipher(c_t, key)
+    print(c_t)
+    print(n_p_t)
+
+    c_t = Vigenere.chipher(p_t, v_key)
+    n_p_t = Vigenere.dechipher(c_t, v_key)
     print(c_t)
     print(n_p_t)
 
