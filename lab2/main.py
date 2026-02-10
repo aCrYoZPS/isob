@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 
 class Caesar:
@@ -167,24 +168,44 @@ class Vigenere:
 
 
 def main():
-    plaintext = input("Текст для шифрования:")
-    key = int(input("Ключ:"))
-    encrypted_text = Caesar.chipher(plaintext, key)
-    print(f"Зашифрованный текст: {encrypted_text}")
-    print(f"Расшифрованный текст: {Caesar.dechipher(encrypted_text, key)}")
+    run = True
+    while run:
+        chipher_type = input("Chipher type ([c]aesar, [v]iginere, [q]uit): ")
+        if chipher_type not in ["c", "v", "q"]:
+            print("Invalid command")
+            continue
 
-    # p_t = "посольство Венгрии"
-    # key = 17
-    # v_key = "Будапешт"
-    # c_t = Caesar.chipher(p_t, key)
-    # n_p_t = Caesar.dechipher(c_t, key)
-    # print(c_t)
-    # print(n_p_t)
-    #
-    # c_t = Vigenere.chipher(p_t, v_key)
-    # n_p_t = Vigenere.dechipher(c_t, v_key)
-    # print(c_t)
-    # print(n_p_t)
+        if chipher_type == "q":
+            run = False
+            continue
+
+        file_name = input("File name: ")
+        if not os.path.exists(file_name):
+            print("Invalid file name")
+            continue
+
+        mode = input("Mode ([c]ipher, [d]echipher)")
+        if chipher_type not in ["c", "d"]:
+            print("Invalid command")
+            continue
+        chipher: Caesar | Vigenere
+        if chipher_type == "c":
+            chipher = Caesar
+            try:
+                key = int(input("Key: "))
+            except:
+                print("Invalid key")
+                continue
+        else:
+            chipher = Vigenere
+            key = input("Key: ")
+
+        if mode == "c":
+            chipher.chipher_file(file_name, key)
+        else:
+            chipher.dechipher(file_name, key)
+
+        run = False
 
 
 if __name__ == "__main__":
