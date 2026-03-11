@@ -185,9 +185,10 @@ def main():
             continue
 
         mode = input("Mode ([c]ipher, [d]echipher)")
-        if chipher_type not in ["c", "d"]:
+        if mode not in ["c", "d"]:
             print("Invalid command")
             continue
+
         chipher: Caesar | Vigenere
         if chipher_type == "c":
             chipher = Caesar

@@ -3,7 +3,7 @@
 
 #show: stp2024.template
 
-#outline()
+#stp2024.full_outline()
 #pagebreak()
 
 = Цель работы
