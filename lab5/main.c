@@ -15,6 +15,7 @@ void vulnerable_stack_demo() {
   strcpy(buffer, overflow_source);
 
   printf("Buffer content: %s\n", buffer);
+  printf("Secret data after:  %s\n", secret_data);
 }
 
 void safe_stack_demo() {
@@ -22,7 +23,7 @@ void safe_stack_demo() {
   char *secret_data = "SENSITIVE_STACK_DATA";
   char *overflow_source = "This string is way longer than sixteen bytes!";
 
-  printf("\n--- Safe Stack Demo (Using strncpy) ---\n");
+  printf("\n--- Safe Stack Demo ---\n");
   printf("Buffer address: %p\n", (void *)buffer);
   printf("Secret data address: %p\n", (void *)secret_data);
   printf("Secret data before: %s\n", secret_data);
